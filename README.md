@@ -25,17 +25,21 @@ Tensorflow
 
 ### 2.1. Dataset Preparation
 
-Place your original images in ```./data``` folder and run the ```./code/prepare_dataset.py``` script:
+1. Place your original images in ```./data``` folder
+
+2. run the ```./code/prepare_dataset.py``` script:
 ```
 cd src 
 python prepare_dataset.py
 ``` 
+
 This will do the following: 
-* Train/validation split 
-* Apply classical Hough Transform to generate ground-truth labels of each image
+1. Train/validation split 
+2. Apply classical Hough Transform to generate ground-truth labels of each image
+
+(See the function ```set_arguments()``` in the file ```prepare_dataset.py``` for information on arguments)
 
 ### 2.2. Training the model
-
 
 ## Authors
 
