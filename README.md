@@ -17,13 +17,13 @@ You need to have following libraries installed:
 ```
 Skimage >= 0.13.0
 Numpy >= 1.13.1
+Keras 
+Tensorflow
 ```
 
-## 2. Quick Start (Demo)
+## 2. Training
 
-## 3. Training
-
-### 3.1. Dataset Preparation
+### 2.1. Dataset Preparation
 
 Place your original images in ```./data``` folder and run the ```./code/prepare_dataset.py``` script:
 ```
@@ -34,12 +34,12 @@ This will do the following:
 * Train/validation split 
 * Apply classical Hough Transform to generate ground-truth labels of each image
 
-### 3.2. Training the model
+### 2.2. Training the model
 
 
 ## Authors
 
-**Muneeb Aadil** - [Github](https://github.com/muneebaadil) - [Email](imuneebaadil@gmail.com)
+**Muneeb Aadil** - [Github Profile](https://github.com/muneebaadil) - (Email: imuneebaadil@gmail.com)
 
 See also the list of [contributors](https://github.com/muneebaadil/Hough-Transform-using-CNNs/contributors) who participated in this project.
 

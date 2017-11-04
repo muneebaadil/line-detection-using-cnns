@@ -5,15 +5,7 @@ import skimage.io as io
 import numpy as np 
 import os 
 from shutil import copyfile
-
-
-#arg simulator cell 
-data_dir = '../data/'
-train_fraction = .8 
-canny_sigma = 1. 
-ext = ['png', 'jpg']
-printevery = 1
-
+import argparse 
 
 def check_and_create(path): 
     if not os.path.exists(path): 
@@ -70,4 +62,16 @@ def prepare_dataset(data_dir, ext, train_fraction, printevery, canny_sigma):
     return 
 
 
-prepare_dataset(data_dir, ext, train_fraction, printevery, canny_sigma)
+def set_arguments(parser):
+    parser.add_argument('-dataDir',action='store', type=str, default='../data/', dest='dataDir')
+    parser.add_argument('-trainFraction', action='store', type=float, default=.8, dest='trainFraction')
+    parser.add_argument('-cannySigma', action='store', type=float, default=1., dest='cannySigma')
+    parser.add_argument('-ext', action='store',type=list, default=['png', 'jpg'], dest='ext')
+    parser.add_argument('-printEvery', action='store', type=int, default=-1, dest='printEvery')
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser()
+    set_arguments(parser)
+    opts = parser.parse_args()
+
+    prepare_dataset(opts.dataDir, opts.ext, opts.trainFraction, opts.printEvery, opts.cannySigma)
