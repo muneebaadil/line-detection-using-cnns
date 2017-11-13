@@ -1,8 +1,10 @@
+#THIS FILE CONTAINS ALL THE MODEL ARCHITECTURES EXPERIMENTED WITH.. 
+
 import keras.layers as layers 
 from keras.initializers import VarianceScaling
 from keras.models import Model
 
-def create_net(opts):
+def model_init(opts):
     """Simply two layer convolutional neural network for initial testing purposes"""
     
     init_fn = VarianceScaling(2.)
@@ -15,3 +17,6 @@ def create_net(opts):
 
     model = Model(inputs=inputs,outputs=c2)
     return model
+
+models_dict = dict()
+models_dict['model_init'] = model_init
