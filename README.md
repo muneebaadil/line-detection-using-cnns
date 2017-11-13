@@ -33,10 +33,10 @@ Although, packages listed above can be seperately downloaded and installed, it's
 ```bash Anaconda****.sh```
 
 #### 1.2.2. Tensorflow 
-1. Follow installation guidelines from [here](https://www.tensorflow.org/install/)
+Follow installation guidelines from [here](https://www.tensorflow.org/install/)
 
 #### 1.2.3. Keras 
-1. Use ```conda``` package manager to install Keras
+Use ```conda``` package manager to install Keras:
 ```conda install keras```
 
 ## 2. Training
