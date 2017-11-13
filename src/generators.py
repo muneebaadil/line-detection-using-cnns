@@ -33,3 +33,6 @@ def generator_full_image(directory, ext, batch_size, preprocessing=None, mode='t
                 imagesX, imagesY = preprocessing(imagesX, imagesY)
 
             yield imagesX, imagesY
+
+generators_dict = dict()
+generators_dict['generator_full_image'] = generator_full_image

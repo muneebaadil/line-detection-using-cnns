@@ -1,10 +1,12 @@
 import argparse
 import numpy as np
 import importlib
+import os 
 
 from models import models_dict
 from losses import losses_dict 
 from optimizers import optimizers_dict
+from generators import generators_dict
 
 def train(opts): 
 	"""Performs the whole algorithm i.e trains a given neural network on given data using given learning parameters
@@ -23,12 +25,15 @@ def train(opts):
 	model.compile(optimizer=optimizer, loss=losses_dict[opts.lossType])
 
 	#Setting up callbacks..
-	return 
+	#return 
 	
-	#Training the model now..
-	train_generator = None 
-	val_generator = None 
-	steps_per_epoch = None
+	#Configuring data loaders/generators now..
+	train_generator = generators_dict[opts.generatorType](os.path.join(opts.dataDir,'train'), opts.ext, opts.batchSize, None, mode='train')
+	val_generator = generators_dict[opts.generatorType](os.path.join(opts.dataDir,'val'), opts.ext, opts.batchSize*2, None, mode='validation')
+	steps_per_epoch = 1
+	validation_steps = 1 
+
+	#FINALLY! TRAINING NOW..
 	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=opts.numEpochs
 								,verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps)
 	return
@@ -38,6 +43,7 @@ def set_arguments(parser):
 	#Data loading arguments
 	parser.add_argument('-dataDir',action='store', type=str, default='../data/prepared/', dest='dataDir')
 	parser.add_argument('-ext', action='store',type=list, default=['png', 'jpg'], dest='ext')
+	parser.add_argument('-generatorType', action='store', type=str, default='generator_full_image', dest='generatorType')
 
 	#Model parameters
 	parser.add_argument('-netType', action='store', type=str, default='model_init', dest='netType')
