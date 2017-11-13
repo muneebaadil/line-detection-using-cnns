@@ -15,12 +15,23 @@ def train(opts):
 	Returns: 
 	None"""
 
-	#Creating given model
+	#Creating given model..
 	model = models_dict[opts.netType](opts)
 
-	#Compiling given model using given learning parameters.
-	optimzer = optimizers_dict[opts.optimizerType](lr=opts.learningRate, decay=opts.lrDecay)
+	#Compiling given model using given learning parameters..
+	optimizer = optimizers_dict[opts.optimizerType](lr=opts.learningRate, decay=opts.lrDecay)
+	model.compile(optimizer=optimizer, loss=losses_dict[opts.lossType])
 
+	#Setting up callbacks..
+	return 
+	
+	#Training the model now..
+	train_generator = None 
+	val_generator = None 
+	steps_per_epoch = None
+	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=opts.numEpochs
+								,verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps)
+	return
 
 
 def set_arguments(parser): 
@@ -32,9 +43,12 @@ def set_arguments(parser):
 	parser.add_argument('-netType', action='store', type=str, default='model_init', dest='netType')
 
 	#Learning parameters
-	parser.add_argument('optimizerType', action='store', type=str, default='adam', dest='optimizerType')
-	parser.add_argument('learningRate', action='store', type=float, default=1e-3, dest='learningRate')
-	parser.add_argument('lrDecay', action='store', type=float, default=0.0, dest='lrDecay')
+	parser.add_argument('-optimizerType', action='store', type=str, default='adam', dest='optimizerType')
+	parser.add_argument('-learningRate', action='store', type=float, default=1e-3, dest='learningRate')
+	parser.add_argument('-lrDecay', action='store', type=float, default=0.0, dest='lrDecay')
+
+	#Loss function parameters
+	parser.add_argument('-lossType', action='store', type=str, default='binary_crossentropy', dest='lossType')
 	pass 
 
 if __name__=='__main__': 
