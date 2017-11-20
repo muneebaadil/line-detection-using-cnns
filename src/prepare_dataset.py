@@ -126,7 +126,7 @@ def generate_hough_label(img, printevery=-1):
     img: binary edge image
 
     Returns: 
-    out: line-edges output image
+    edge_map: line-edges output image
     """
     edge_map = np.zeros_like(img_test)
     
@@ -137,8 +137,7 @@ def generate_hough_label(img, printevery=-1):
     for val, angle, dist in zip(*hough_line_peaks(acc,thetas,rhos)):
         y_coords = lines_ycoords[(round(dist)+diag_len, angle)]
         x_coords = lines_xcoords[(round(dist)+diag_len, angle)]
-        edge_map[y_coords,x_coords] = 255 #to do; convert to probs
-        
+        edge_map[y_coords,x_coords] = val/float(diag_len) #probabilites conversion        
     return edge_map
 
 def set_arguments(parser):
