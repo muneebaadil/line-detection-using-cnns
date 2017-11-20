@@ -117,7 +117,7 @@ def my_hough_line(img, printevery):
 
     return accumulator, thetas, rhos, lines_cache_xcoords, lines_cache_ycoords
 
-def generate_hough_label(img): 
+def generate_hough_label(img, printevery=-1): 
     """
     Given a binary edge-image, generates a hough output i.e turns off the edge pixels that 
     do not fall on any line, and keeps the edge pixels on otherwise. 
@@ -128,33 +128,18 @@ def generate_hough_label(img):
     Returns: 
     out: line-edges output image
     """
-    out, out_temp = np.zeros_like(img, dtype=np.float32), np.zeros_like(img, dtype=np.float32)
+    edge_map = np.zeros_like(img_test)
     
-    #calculating hough-space, and converting to probabilities
-    h, theta, d = hough_line(img)
-    h = h/float(np.max(h)) 
+    acc,thetas,rhos,lines_xcoords,lines_ycoords=my_hough_line(img,printevery)
+    height,width = img.shape
+    diag_len = np.ceil(np.sqrt(width * width + height * height))
     
-    for val, angle, dist in zip(*hough_line_peaks(h, theta, d)):
-        #calculating end coordinates of line
-        y0 = (dist - 0 * np.cos(angle)) / np.sin(angle)
-        y1 = (dist - img.shape[1] * np.cos(angle)) / np.sin(angle)
+    for val, angle, dist in zip(*hough_line_peaks(acc,thetas,rhos)):
+        y_coords = lines_ycoords[(round(dist)+diag_len, angle)]
+        x_coords = lines_xcoords[(round(dist)+diag_len, angle)]
+        edge_map[y_coords,x_coords] = 255 #to do; convert to probs
         
-        #generating x and corresponding y coordinates
-        xidx = np.arange(0, img.shape[1])
-        yidx = np.linspace(y0, y1, num=xidx.shape[0]).astype(np.int)
-        
-        #filtering out point not in image space
-        yidx_valid_idx = np.nonzero((yidx >= 0) & (yidx < img.shape[0]))
-        xidx = xidx[yidx_valid_idx]
-        yidx = yidx[yidx_valid_idx]
-        
-        out_temp[yidx, xidx] = val
-        
-    #removing the lines corresponding to edges not present in input edge-map 
-    keep_idx = (out_temp.astype(np.bool) & img)
-    out_temp[np.logical_not(keep_idx)] = 0 
-    
-    return out_temp 
+    return edge_map
 
 def set_arguments(parser):
     parser.add_argument('-dataDir',action='store', type=str, default='../data/', dest='dataDir')
