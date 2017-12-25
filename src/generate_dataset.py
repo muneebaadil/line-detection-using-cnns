@@ -81,5 +81,5 @@ if __name__=='__main__':
     set_arguments(parser)
     opts = parser.parse_args()
 
-    writeOptsToFile(os.path.join(opts.outDir,'config.txt'), vars(opts))
     GenerateDataset(opts.outDir, opts.numImgs, (opts.imgSize,opts.imgSize), opts.maxNumLines, opts.maxNumOthers, opts.printEvery)
+    writeOptsToFile(os.path.join(opts.outDir,'config.txt'), vars(opts))
