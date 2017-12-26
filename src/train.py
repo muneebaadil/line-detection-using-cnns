@@ -9,6 +9,8 @@ from optimizers import optimizers_dict
 from generators import generators_dict
 from keras.callbacks import ModelCheckpoint
 
+import pdb 
+
 def writeOptsToFile(fpath, optsDict): 
     fobj = open(fpath, 'w')
 
@@ -39,8 +41,8 @@ def train(opts):
 	val_generator = generators_dict[opts.generatorType](os.path.join(opts.dataDir,'val', opts.dataType), 
 														opts.ext, opts.batchSize*2, None, mode='validation')
 														
-	steps_per_epoch = len(os.path.join(opts.dataDir,'train', opts.dataType, 'X')) / opts.batchSize
-	validation_steps = len(os.path.join(opts.dataDir,'val', opts.dataType, 'X')) / (opts.batchSize*2)
+	steps_per_epoch = len(os.listdir(os.path.join(opts.dataDir,'train', opts.dataType, 'X'))) / opts.batchSize
+	validation_steps = len(os.listdir(os.path.join(opts.dataDir,'val', opts.dataType, 'X'))) / (opts.batchSize*2)
 
 	#Configuring experimentation directories,callbacks and stuff..
 	expDir = os.path.join(opts.logRootDir, opts.logDir)
