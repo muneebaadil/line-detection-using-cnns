@@ -7,7 +7,7 @@ from time import gmtime, strftime
 from models import models_dict
 from optimizers import optimizers_dict
 from generators import generators_dict
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
 
 import pdb 
 
@@ -44,20 +44,21 @@ def train(opts):
 	steps_per_epoch = len(os.listdir(os.path.join(opts.dataDir,'train', opts.dataType, 'X'))) / opts.batchSize
 	validation_steps = len(os.listdir(os.path.join(opts.dataDir,'val', opts.dataType, 'X'))) / (opts.batchSize*2)
 
-	#Configuring experimentation directories,callbacks and stuff..
-	expDir = os.path.join(opts.logRootDir, opts.logDir)
-	if not os.path.exists(expDir): 
-		os.makedirs(expDir)
-		writeConfigToFile(os.path.join(expDir,'opts.txt'), vars(opts), model)
-		
-	os.makedirs(os.path.join(expDir, 'model'))
-	ckptCallback=ModelCheckpoint(os.path.join(expDir,'model', '{epoch:02d}-{loss:.2f}.hdf5'),
+	#Configuring experimentation directories..
+	if not os.path.exists(opts.expDir): 
+		os.makedirs(opts.expDir)
+		writeConfigToFile(os.path.join(opts.expDir,'opts.txt'), vars(opts), model)
+	
+	#Configuring callbacks..
+	os.makedirs(os.path.join(opts.expDir, 'model'))
+	ckptCallback=ModelCheckpoint(os.path.join(opts.expDir,'model', '{epoch:02d}-{loss:.2f}.hdf5'),
 								monitor='loss',save_best_only=True)
+	tboardCallback=TensorBoard(log_dir=os.path.join(opts.expDir,'tensorboardLogs'))
 
-	return 
 	#FINALLY! TRAINING NOW..
-	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=opts.numEpochs
-								,verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps)
+	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=opts.numEpochs,
+								verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps,
+								callbacks=[ckptCallback,tboardCallback])
 	return
 
 
@@ -98,6 +99,7 @@ def PostprocessOpts(opts):
 	opts.kernelSizes = [int(x) for x in opts.kernelSizes.split(',')]
 	opts.numKernels = [int(x) for x in opts.numKernels.split(',')]
 	opts.activations = opts.activations.split(',')
+	opts.expDir = os.path.join(opts.logRootDir, opts.logDir)
 	return 
 
 if __name__=='__main__': 
