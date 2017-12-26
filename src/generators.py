@@ -2,7 +2,7 @@
 import skimage.io as io
 import os 
 import numpy as np 
-
+from skimage import img_as_float
 
 def generator_full_image(directory, ext, batch_size, preprocessing=None, mode='train'):
     """"""
@@ -37,8 +37,9 @@ def generator_full_image(directory, ext, batch_size, preprocessing=None, mode='t
             imagesX = io.concatenate_images(imagesX)
             imagesY = io.concatenate_images(imagesY)
 
-            imagesX = imagesX[:,:,:,np.newaxis]
-            imagesY = imagesY[:,:,:,np.newaxis]
+            imagesX = img_as_float(imagesX[:,:,:,np.newaxis])
+            imagesY = img_as_float(imagesY[:,:,:,np.newaxis]).astype(bool)
+
             yield imagesX, imagesY
 
 generators_dict = dict()
