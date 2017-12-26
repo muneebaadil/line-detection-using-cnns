@@ -4,6 +4,8 @@ import os
 import numpy as np 
 import argparse 
 
+import pdb
+
 def check_and_create(path): 
     if not os.path.exists(path): 
         os.makedirs(path)
@@ -15,8 +17,8 @@ def AddLines(X,Y,maxNumLines,imgSize):
         [a,b,c,d] = np.random.randint(0,imgSize[1], size=4)
         idx = draw.line(a,b,c,d)
         
-        X[idx] = 255 
-        Y[idx] = 255
+        X[idx] = 1. 
+        Y[idx] = 1.
     return 
 
 def AddOthers(X,maxNumOthers,imgSize): 
@@ -27,7 +29,7 @@ def AddOthers(X,maxNumOthers,imgSize):
         r = int(r*2) 
         c = int(c*2)
         idx = draw.circle_perimeter(r,c,radius,shape=imgSize)
-        X[idx] = 255
+        X[idx] = 1.
     return 
 
 def GenerateExample(imgSize, maxNumLines, maxNumOthers):
@@ -53,8 +55,9 @@ def GenerateDataset(outDir, numImgs, imgSize, maxNumLines, maxNumOthers, printEv
         x,y = GenerateExample(imgSize, maxNumLines, maxNumOthers)
         
         #saving to disk..
-        io.imsave(os.path.join(Xpath,'{}.png'.format(i)), x/255.)
-        io.imsave(os.path.join(Ypath,'{}.png'.format(i)), y/255.)
+        pdb.set_trace()
+        io.imsave(os.path.join(Xpath,'{}.png'.format(i)), x)
+        io.imsave(os.path.join(Ypath,'{}.png'.format(i)), y)
     
         #optional verbosity
         if (printEvery > 0) and ((i % printEvery) == 0): 
