@@ -6,7 +6,7 @@ import argparse
 
 import pdb
 
-def check_and_create(path): 
+def CheckAndCreate(path): 
     if not os.path.exists(path): 
         os.makedirs(path)
         
@@ -45,9 +45,9 @@ def GenerateExample(imgSize, maxNumLines, maxNumOthers):
     return X,Y
 
 def GenerateDataset(outDir, numImgs, imgSize, maxNumLines, maxNumOthers, printEvery=-1): 
-    check_and_create(os.path.join(outDir, 'X'))
+    CheckAndCreate(os.path.join(outDir, 'X'))
     Xpath = os.path.join(outDir, 'X')
-    check_and_create(os.path.join(outDir, 'Y'))
+    CheckAndCreate(os.path.join(outDir, 'Y'))
     Ypath = os.path.join(outDir, 'Y')
     
     for i in xrange(numImgs): 

@@ -3,27 +3,28 @@
 import keras.layers as layers 
 from keras.initializers import VarianceScaling
 from keras.models import Model, Sequential
+import itertools as iters
 
 def model_init(opts):
-    """Simply two layer convolutional neural network for initial testing purposes"""
+    """Simple sequential image-to-image convolutional neural network"""
     
     init_fn = VarianceScaling(2.)
 
     model = Sequential()
+    isFirst = True
+    for ks, nk, a in iters.izip(opts.kernelSizes, opts.numKernels, opts.activations): 
 
-    model.add(layers.Conv2D(32,kernel_size=3,strides=1,padding='same',activation='relu',
-                             kernel_initializer=init_fn, input_shape=(512,512,1)))
-    if opts.dropRate >= 0: 
-        model.add(layers.Dropout(rate=opts.dropRate))
-    
-    model.add(layers.Conv2D(32,kernel_size=3,strides=1,padding='same',activation='relu',
-                             kernel_initializer=init_fn))
-    if opts.dropRate >= 0: 
-        model.add(layers.Dropout(opts.dropRate))
+        if isFirst:
+            model.add(layers.Conv2D(nk,kernel_size=ks,strides=opts.strides,padding=opts.padding,activation=a,
+                                kernel_initializer=init_fn, input_shape=opts.inputShape))
+            isFirst = False
+        else: 
+            model.add(layers.Conv2D(nk,kernel_size=ks,strides=opts.strides,padding=opts.padding,activation=a,
+                                kernel_initializer=init_fn))
 
-    model.add(layers.Conv2D(1,kernel_size=1,strides=1,padding='same',activation='sigmoid',
-                            kernel_initializer=init_fn))
-    return model    
+        if opts.dropRate >= 0.: 
+            model.add(layers.Dropout(rate=opts.dropRate))
+    return model
 
 models_dict = dict()
-models_dict['model_init'] = model_init
+models_dict['imageToImageSeq'] = model_init
