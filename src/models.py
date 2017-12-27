@@ -22,7 +22,7 @@ def model_init(opts):
             model.add(layers.Conv2D(nk,kernel_size=ks,strides=opts.strides,padding=opts.padding,activation=a,
                                 kernel_initializer=init_fn))
 
-        if opts.dropRate >= 0.: 
+        if opts.dropRate > 0.0: 
             model.add(layers.Dropout(rate=opts.dropRate))
     return model
 
