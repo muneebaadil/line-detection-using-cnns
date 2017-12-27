@@ -76,7 +76,7 @@ def SetArguments(parser):
 	parser.add_argument('-netType', action='store', type=str, default='imageToImageSeq', dest='netType')
 	parser.add_argument('-dropRate', action='store', type=float, default=0.0, dest='dropRate')
 	parser.add_argument('-kernelSizes', action='store', type=str, default='3,3,1', dest='kernelSizes')
-	parser.add_argument('-numKernels', action='store', type=str, default='32,32,1', dest='numKernels')
+	parser.add_argument('-numKernels', action='store', type=str, default='32,64,1', dest='numKernels')
 	parser.add_argument('-activations', action='store', type=str, default='relu,relu,sigmoid', dest='activations')
 	parser.add_argument('-padding', action='store', type=str, default='same', dest='padding')
 	parser.add_argument('-strides', action='store', type=int, default=1, dest='strides')
@@ -90,7 +90,7 @@ def SetArguments(parser):
 	parser.add_argument('-batchSize', action='store', type=int, default=1024, dest='batchSize')
 
 	#Loss function parameters
-	parser.add_argument('-lossType', action='store', type=str, default='binary_crossentropy', dest='lossType')
+	parser.add_argument('-lossType', action='store', type=str, default='binaryCrossEntropy', dest='lossType')
 
 	#Logging parameters
 	parser.add_argument('-logRootDir',action='store',type=str, default='../experiments/',dest='logRootDir')
