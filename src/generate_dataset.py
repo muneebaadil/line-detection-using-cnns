@@ -55,7 +55,6 @@ def GenerateDataset(outDir, numImgs, imgSize, maxNumLines, maxNumOthers, printEv
         x,y = GenerateExample(imgSize, maxNumLines, maxNumOthers)
         
         #saving to disk..
-        pdb.set_trace()
         io.imsave(os.path.join(Xpath,'{}.png'.format(i)), x)
         io.imsave(os.path.join(Ypath,'{}.png'.format(i)), y)
     
