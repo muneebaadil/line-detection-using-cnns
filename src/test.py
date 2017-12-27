@@ -1,27 +1,47 @@
+from itertools import izip
 import argparse
 import os 
 from keras.models import load_model
 import skimage.io as io 
+import pdb 
+import numpy as np 
+from sklearn.metrics import precision_recall_fscore_support
 
-def LoadData(directory, ext): 
+def CheckAndCreate(path): 
+    if not os.path.exists(path): 
+        os.makedirs(path)
 
-    #Determining pathnames of X and Y images
+def GenerateStats(xpath, ypath, model, outDir, threshold):
+    xtest, ytest = io.imread(xpath), io.imread(ypath) 
+    xtest, ytest = xtest[np.newaxis,:,:,np.newaxis], (ytest[np.newaxis,:,:,np.newaxis]).astype(bool)
+    ypred = model.predict(xtest, verbose=0)
+    
+    
+    io.imsave(os.path.join(outDir,'0.png'), ypred[0,:,:,0])
+
+    p,r,f,s = precision_recall_fscore_support(ytest.flatten(), ypred.flatten() > opts.decideThreshold,
+                                             beta=1.0, labels=[False,True])
+    pdb.set_trace()
+    return 
+
+def Test(opts): 
+    #model loading..
+    model = load_model(opts.modelPath, compile=False)
+    
+    #pathnames loading for test images and labels
+    directory = os.path.join(opts.dataDir, opts.dataType)
     fnamesX = sorted(os.listdir(os.path.join(directory, 'X')))
-    pathnamesX = [os.path.join(directory,'X',f) for f in fnamesX if f.split('.')[-1] in ext]
+    pathnamesX = [os.path.join(directory,'X',f) for f in fnamesX if f.split('.')[-1] in opts.ext]
 
     fnamesY = sorted(os.listdir(os.path.join(directory,'Y')))
-    pathnamesY = [os.path.join(directory,'Y',f) for f in fnamesY if f.split('.')[-1] in ext]
+    pathnamesY = [os.path.join(directory,'Y',f) for f in fnamesY if f.split('.')[-1] in opts.ext]
 
-    #Loading Images
-    X = io.ImageCollection(pathnamesX).concatenate()
-    Y = io.ImageCollection(pathnamesY).concatenate()
+    CheckAndCreate(opts.outDir)
 
-    return X,Y
-
-def test(opts): 
-    model = load_model(opts.modelPath)
-
-    X,Y = LoadData(os.path.join(opts.dataDir, opts.dataType), opts.ext)
+    #testing image one by one..
+    for xpath,ypath in izip(pathnamesX, pathnamesY): 
+        GenerateStats(xpath, ypath, model, opts.outDir, opts.decideThreshold)
+        break 
     return 
 
 def SetArguments(parser): 
@@ -37,19 +57,21 @@ def SetArguments(parser):
 
     #Other parameters 
     parser.add_argument('-decideThreshold', action='store',type=float, default=.5, dest='decideThreshold')
-    parser.add_argument('-batchSize', action='store',type=float, default=.5, dest='batchSize')
+    parser.add_argument('-batchSize', action='store',type=int, default=1, dest='batchSize')
+    parser.add_argument('-verbosity', action='store',type=int, default=1, dest='verbosity')
     return 
 
 def PostprocessOpts(opts): 
     opts.outDir = os.path.join(opts.outRootDir, opts.modelExpName)
-    opts.modelPath = os.path.join(os.expRootDir, opts.modelExpName, os.listdir(opts.modelExpName, 'model')[0])
+    opts.modelPath = os.path.join(opts.expRootDir, opts.modelExpName)
+    opts.modelPath = os.path.join(opts.modelPath, 'model', os.listdir(os.path.join(opts.modelPath, 'model'))[0])
     return
 
-if __name__=='__main__': 
+if __name__=='__main__':
     parser = argparse.ArgumentParser()
-	SetArguments(parser)
+    SetArguments(parser)
 
-	opts = parser.parse_args()
-	PostprocessOpts(opts)
+    opts = parser.parse_args()
+    PostprocessOpts(opts)
 
-	test(opts)
+    Test(opts)
