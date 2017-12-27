@@ -10,4 +10,4 @@ def WeightedBinaryCrossentropy(y_true, y_pred):
 	weights = 1./probs
 	return K.mean(err*weights)
 
-losses_dict={'BinaryCrossEntropy':BinaryCrossEntropy,'WeightedBinaryCrossEntropy':WeightedBinaryCrossEntropy}
+losses_dict={'binaryCrossEntropy':BinaryCrossEntropy,'weightedBinaryCrossEntropy':WeightedBinaryCrossEntropy}

@@ -3,11 +3,12 @@ import numpy as np
 import importlib
 import os 
 from time import gmtime, strftime
+from keras.callbacks import ModelCheckpoint, TensorBoard
 
 from models import models_dict
 from optimizers import optimizers_dict
 from generators import generators_dict
-from keras.callbacks import ModelCheckpoint, TensorBoard
+from losses import losses_dict
 
 import pdb 
 
@@ -30,11 +31,11 @@ def train(opts):
 
 	#Creating given model..
 	model = models_dict[opts.netType](opts)
-	
+
 	#Compiling given model using given learning parameters..
 	optimizer = optimizers_dict[opts.optimizerType](lr=opts.learningRate, decay=opts.lrDecay)
-	model.compile(optimizer=optimizer, loss=opts.lossType)
-	
+	model.compile(optimizer=optimizer, loss=losses_dict[opts.lossType])
+
 	#Configuring data loaders/generators now..
 	train_generator = generators_dict[opts.generatorType](os.path.join(opts.dataDir,'train', opts.dataType),
 														 opts.ext, opts.batchSize, None, mode='train')
@@ -94,7 +95,7 @@ def SetArguments(parser):
 	#Logging parameters
 	parser.add_argument('-logRootDir',action='store',type=str, default='../experiments/',dest='logRootDir')
 	parser.add_argument('-logDir',action='store',type=str, default=strftime("%d-%m-%Y__%H-%M-%S",gmtime()),dest='logDir')
-	parser.add_argument('-logPerEpoch',action='store',type=int, default=2,dest='logPerEpoch')
+	parser.add_argument('-logPerEpoch',action='store',type=int, default=1,dest='logPerEpoch')
 	return
 
 def PostprocessOpts(opts): 
