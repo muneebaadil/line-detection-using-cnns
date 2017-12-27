@@ -41,8 +41,9 @@ def train(opts):
 	val_generator = generators_dict[opts.generatorType](os.path.join(opts.dataDir,'val', opts.dataType), 
 														opts.ext, opts.batchSize*2, None, mode='validation')
 														
-	steps_per_epoch = len(os.listdir(os.path.join(opts.dataDir,'train', opts.dataType, 'X'))) / opts.batchSize
+	steps_per_epoch = (len(os.listdir(os.path.join(opts.dataDir,'train', opts.dataType, 'X'))) / opts.batchSize) / opts.logPerEpoch
 	validation_steps = len(os.listdir(os.path.join(opts.dataDir,'val', opts.dataType, 'X'))) / (opts.batchSize*2)
+	numEpochs_ = opts.numEpochs * opts.logPerEpoch
 
 	#Configuring experimentation directories..
 	if not os.path.exists(opts.expDir): 
@@ -56,7 +57,7 @@ def train(opts):
 	tboardCallback=TensorBoard(log_dir=os.path.join(opts.expDir,'tensorboardLogs'))
 
 	#FINALLY! TRAINING NOW..
-	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=opts.numEpochs,
+	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=numEpochs_,
 								verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps,
 								callbacks=[ckptCallback,tboardCallback])
 	return
@@ -93,6 +94,7 @@ def SetArguments(parser):
 	#Logging parameters
 	parser.add_argument('-logRootDir',action='store',type=str, default='../experiments/',dest='logRootDir')
 	parser.add_argument('-logDir',action='store',type=str, default=strftime("%d-%m-%Y__%H-%M-%S",gmtime()),dest='logDir')
+	parser.add_argument('-logPerEpoch',action='store',type=int, default=2,dest='logPerEpoch')
 	return
 
 def PostprocessOpts(opts): 
