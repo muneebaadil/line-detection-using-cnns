@@ -19,22 +19,11 @@ class valImagesSaver(callbacks.Callback):
         pathnamesX = [os.path.join(dataDir,f) for f in fnamesX if f.split('.')[-1] in ext]
         self.pathnamesX = np.array(pathnamesX)
 
-    def on_batch_end(self, epoch, logs): 
+    def on_epoch_end(self, epoch, logs): 
 
         #If best validation model yet..
         if logs.get('val_loss') < self.min:
             self.min = logs.get('val_loss')
-            
-            # for path in self.pathnamesX: 
-            #     img = io.imread(path)
-            #     img = img[np.newaxis, :, :, np.newaxis]
-                
-            #     ypred = self.model.predict(img)
-
-            #     fname = path.split('/')[-1]
-            #     outPath = os.path.join(self.outDir, fname)
-
-            #     io.imsave(outPath, ypred[0,:,:,0])
 
             imgs = io.ImageCollection(self.pathnamesX)
             imgs = img_as_float(imgs.concatenate()[:,:,:,np.newaxis])
@@ -45,5 +34,4 @@ class valImagesSaver(callbacks.Callback):
                 fname = path.split('/')[-1]
                 outPath = os.path.join(self.outDir, fname)
 
-                pdb.set_trace()
                 io.imsave(outPath, ypreds[i,:,:,0])
