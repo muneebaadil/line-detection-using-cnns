@@ -9,6 +9,7 @@ from models import models_dict
 from optimizers import optimizers_dict
 from generators import generators_dict
 from losses import losses_dict
+from valImagesSaver import valImagesSaver
 
 import pdb 
 
@@ -17,7 +18,6 @@ def writeConfigToFile(fpath, optsDict, model):
 
     for k,v in optsDict.items(): 
         fobj.write('{} >> {}\n'.format(str(k), str(v)))
-    fobj.write('\nmodel json:\n{}'.format(model.to_json()))
     fobj.close()
 
 def train(opts): 
@@ -56,17 +56,19 @@ def train(opts):
 	ckptCallback=ModelCheckpoint(os.path.join(opts.expDir,'model', '{epoch:02d}-{loss:.2f}.hdf5'),
 								monitor='loss',save_best_only=True)
 	tboardCallback=TensorBoard(log_dir=os.path.join(opts.expDir,'tensorboardLogs'))
+	valsaver = valImagesSaver(dataDir=os.path.join(opts.dataDir,'val', opts.dataType, 'X'),
+					ext=opts.ext, outDir=os.path.join(opts.expDir, 'valImages'))
 
 	#FINALLY! TRAINING NOW..
 	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=numEpochs_,
 								verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps,
-								callbacks=[ckptCallback,tboardCallback])
+								callbacks=[ckptCallback,tboardCallback,valsaver])
 	return
 
 
 def SetArguments(parser): 
 	#Data loading arguments
-	parser.add_argument('-dataDir',action='store', type=str, default='../data/generated2/', dest='dataDir')
+	parser.add_argument('-dataDir',action='store', type=str, default='../data/generated/', dest='dataDir')
 	parser.add_argument('-dataType',action='store', type=str, default='noNoise', dest='dataType')
 	parser.add_argument('-ext', action='store',type=list, default=['png', 'jpg'], dest='ext')
 	parser.add_argument('-generatorType', action='store', type=str, default='generator_full_image', dest='generatorType')
