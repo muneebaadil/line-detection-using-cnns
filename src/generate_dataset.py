@@ -6,9 +6,7 @@ import argparse
 
 import pdb
 
-def CheckAndCreate(path): 
-    if not os.path.exists(path): 
-        os.makedirs(path)
+import utils import *
         
 def AddLines(X,Y,maxNumLines,imgSize): 
     numLines = np.random.randint(1,maxNumLines)

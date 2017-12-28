@@ -6,23 +6,19 @@ import skimage.io as io
 import pdb 
 import numpy as np 
 from sklearn.metrics import precision_recall_fscore_support
-
-def CheckAndCreate(path): 
-    if not os.path.exists(path): 
-        os.makedirs(path)
+from utils import * 
 
 def GenerateStats(xpath, ypath, model, outDir, threshold):
     xtest, ytest = io.imread(xpath), io.imread(ypath) 
     xtest, ytest = xtest[np.newaxis,:,:,np.newaxis], (ytest[np.newaxis,:,:,np.newaxis]).astype(bool)
     ypred = model.predict(xtest, verbose=0)
     
-    
-    io.imsave(os.path.join(outDir,'0.png'), ypred[0,:,:,0])
+    io.imsave(os.path.join(outDir,'0.png'), ypred[0,:,:,0], )
 
-    p,r,f,s = precision_recall_fscore_support(ytest.flatten(), ypred.flatten() > opts.decideThreshold,
-                                             beta=1.0, labels=[False,True])
-    pdb.set_trace()
-    return 
+    #ypred[0,0,0,0] = .8 #for mere testing purposes
+    #p,r,f,s = precision_recall_fscore_support(ytest.flatten(), ypred.flatten() > opts.decideThreshold,
+    #                                         beta=1.0, labels=[False,True])
+    return #p,r,f,s
 
 def Test(opts): 
     #model loading..
@@ -38,10 +34,19 @@ def Test(opts):
 
     CheckAndCreate(opts.outDir)
 
+    precisions,recalls,fscores,supports=[],[],[],[]
     #testing image one by one..
     for xpath,ypath in izip(pathnamesX, pathnamesY): 
         GenerateStats(xpath, ypath, model, opts.outDir, opts.decideThreshold)
+
+        # precisions.append(p)
+        # recalls.append(r)
+        # fscores.append(f)
+        # supports.append(s)
+        print ',',
         break 
+
+    #print np.mean(np.array(precisions)),np.mean(np.array(recalls)),np.mean(np.array(fscores)),np.mean(np.array(supports))
     return 
 
 def SetArguments(parser): 
