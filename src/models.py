@@ -1,6 +1,6 @@
 #THIS FILE CONTAINS ALL THE MODEL ARCHITECTURES EXPERIMENTED WITH.. 
 
-import keras.layers as layers,
+import keras.layers as layers
 from keras.initializers import VarianceScaling
 from keras.models import Model, Sequential
 import itertools as iters
