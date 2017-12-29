@@ -34,7 +34,7 @@ def train(opts):
 
 	#Compiling given model using given learning parameters..
 	optimizer = optimizers_dict[opts.optimizerType](lr=opts.learningRate, decay=opts.lrDecay)
-	model.compile(optimizer=optimizer, loss=losses_dict[opts.lossType])
+	model.compile(optimizer=optimizer, loss=losses_dict[opts.lossType](model.input))
 
 	#Configuring data loaders/generators now..
 	train_generator = generators_dict[opts.generatorType](os.path.join(opts.dataDir,'train', opts.dataType),
@@ -77,8 +77,8 @@ def SetArguments(parser):
 	#Model parameters
 	parser.add_argument('-netType', action='store', type=str, default='imageToImageSeq', dest='netType')
 	parser.add_argument('-dropRate', action='store', type=float, default=0.0, dest='dropRate')
-	parser.add_argument('-kernelSizes', action='store', type=str, default='3,3,1', dest='kernelSizes')
-	parser.add_argument('-numKernels', action='store', type=str, default='32,64,1', dest='numKernels')
+	parser.add_argument('-kernelSizes', action='store', type=str, default='3,3,3', dest='kernelSizes')
+	parser.add_argument('-numKernels', action='store', type=str, default='16,16,1', dest='numKernels')
 	parser.add_argument('-activations', action='store', type=str, default='relu,relu,sigmoid', dest='activations')
 	parser.add_argument('-padding', action='store', type=str, default='same', dest='padding')
 	parser.add_argument('-strides', action='store', type=int, default=1, dest='strides')
