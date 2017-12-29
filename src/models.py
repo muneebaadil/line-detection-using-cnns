@@ -6,7 +6,7 @@ from keras.models import Model, Sequential
 import itertools as iters
 from keras_contrib.layers.normalization import InstanceNormalization
 
-def model_init(opts):
+def ImageToImageSeqModels(opts):
     """Simple sequential image-to-image convolutional neural network"""
     
     init_fn = VarianceScaling(2.)
@@ -31,5 +31,27 @@ def model_init(opts):
             model.add(layers.Dropout(rate=opts.dropRate))
     return model
 
+# def UnetModels(opts): 
+#     init_fn = VarianceScaling(2.)
+
+#     scaleLayerInput = layers.Input(shape=opts.inputShape)
+#     scaleSpace = []
+
+#     #downsampling path
+#     for i in xrange(opts.numScales): 
+#         out = layers.Conv2D(opts.numKernels, kernel_size=opts.kernelSizes, strides=opts.strides, padding=opts.padding, 
+#                     kernel_initializer=init_fn)(scaleLayerInput)
+
+#         scaleSpace.append(out)
+#         scaleLayerInput = layers.MaxPool2D(pool_size=opts.poolSize,strides=opts.strides,padding='valid')
+
+#     #middle ground
+#     scaleLayerInput = layers.Conv2D(opts.numKernels, kernel_size=opts.kernelSizes, strides=opts.strides, padding='same', 
+#                                     kernel_initializer=init_fn)(scaleLayerInput)
+    
+#     #upsampling path
+#     for i in xrange(opts.numScales): 
+#         out = layers.Up
+
 models_dict = dict()
-models_dict['imageToImageSeq'] = model_init
+models_dict['imageToImageSeq'] = ImageToImageSeqModels
