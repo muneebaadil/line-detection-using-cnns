@@ -9,16 +9,9 @@ from models import models_dict
 from optimizers import optimizers_dict
 from generators import generators_dict
 from losses import losses_dict
-from valImagesSaver import valImagesSaver
+from utils import * 
 
 import pdb 
-
-def writeConfigToFile(fpath, optsDict, model): 
-    fobj = open(fpath, 'w')
-
-    for k,v in optsDict.items(): 
-        fobj.write('{} >> {}\n'.format(str(k), str(v)))
-    fobj.close()
 
 def train(opts): 
 	"""Performs the whole algorithm i.e trains a given neural network on given data using given learning parameters

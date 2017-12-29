@@ -9,18 +9,6 @@ from sklearn.metrics import precision_recall_fscore_support
 from utils import * 
 from skimage import img_as_float
 
-def GenerateStats(xpath, ypath, model, outDir, threshold):
-    xtest, ytest = io.imread(xpath), io.imread(ypath) 
-    xtest, ytest = xtest[np.newaxis,:,:,np.newaxis], (ytest[np.newaxis,:,:,np.newaxis]).astype(bool)
-    ypred = model.predict(xtest, verbose=0)
-    
-    io.imsave(os.path.join(outDir,'0.png'), ypred[0,:,:,0], )
-
-    #ypred[0,0,0,0] = .8 #for mere testing purposes
-    #p,r,f,s = precision_recall_fscore_support(ytest.flatten(), ypred.flatten() > opts.decideThreshold,
-    #                                         beta=1.0, labels=[False,True])
-    return #p,r,f,s
-
 def Test(opts): 
     #model loading..
     model = load_model(opts.modelPath, compile=False)
