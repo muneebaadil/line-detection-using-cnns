@@ -3,7 +3,7 @@ import numpy as np
 import importlib
 import os 
 from time import gmtime, strftime
-from keras.callbacks import ModelCheckpoint, TensorBoard
+from keras.callbacks import ModelCheckpoint, TensorBoard, TerminateOnNaN
 import pickle
 from keras.models import load_model
 
@@ -60,11 +60,12 @@ def train(opts):
 								batch_size=opts.batchSize,write_graph=False, write_grads=True)
 	valsaver = valImagesSaver(dataDir=os.path.join(opts.dataDir,'val', opts.dataType, 'X'),
 					ext=opts.ext, outDir=os.path.join(opts.expDir, 'valImages'))
+	terminator = TerminateOnNaN()
 
 	#FINALLY! TRAINING NOW..
 	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=numEpochs_,
 								verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps,
-								callbacks=[ckptCallback,tboardCallback,valsaver])
+								callbacks=[ckptCallback,tboardCallback,valsaver,terminator])
 
 	with open(os.path.join(opts.expDir, 'trainHistory.pkl'), 'wb') as fobj: 
 		pickle.dump(history.history, fobj)
