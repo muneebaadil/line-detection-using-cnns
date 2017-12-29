@@ -4,12 +4,12 @@ def BinaryCrossEntropy(y_true, y_pred):
 	losses = -((y_true*K.log(y_pred)) + ((1-y_true)*K.log(1-y_pred)))
 	return K.mean(losses)
 
-def WeightedBinaryCrossEntropy(x_true): 
+def WeightedBinaryCrossEntropy(x_true, eps): 
 	def WeightedBinaryCrossEntropy_(y_true, y_pred):
 		err = -((y_true*K.log(y_pred)) + ((1-y_true)*K.log(1-y_pred)))
 
 		probs = K.mean(x_true,axis=(1,2,3),keepdims=True)
-		weights_pos, weights_neg = 1./probs, 1./(1-probs)
+		weights_pos, weights_neg = 1./(probs+eps), 1./((1-probs)+eps)
 		weights = (x_true*weights_pos) + ((1-x_true)*weights_neg)
 
 		return K.mean(err*weights)
