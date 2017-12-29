@@ -34,7 +34,7 @@ def train(opts):
 
 	#Compiling given model using given learning parameters..
 	optimizer = optimizers_dict[opts.optimizerType](lr=opts.learningRate, decay=opts.lrDecay)
-	model.compile(optimizer=optimizer, loss=losses_dict[opts.lossType](model.input))
+	model.compile(optimizer=optimizer, loss=losses_dict[opts.lossType](model.input, opts.epsilon))
 
 	#Configuring data loaders/generators now..
 	train_generator = generators_dict[opts.generatorType](os.path.join(opts.dataDir,'train', opts.dataType),
@@ -101,6 +101,7 @@ def SetArguments(parser):
 
 	#Loss function parameters
 	parser.add_argument('-lossType', action='store', type=str, default='weightedBinaryCrossEntropy', dest='lossType')
+	parser.add_argument('-epsilon', action='store', type=float, default=1e-6, dest='epsilon')
 
 	#Logging parameters
 	parser.add_argument('-logRootDir',action='store',type=str, default='../experiments/',dest='logRootDir')
