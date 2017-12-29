@@ -38,6 +38,7 @@ def train(opts):
 														
 	steps_per_epoch = (len(os.listdir(os.path.join(opts.dataDir,'train', opts.dataType, 'X'))) / opts.batchSize) / opts.logPerEpoch
 	validation_steps = len(os.listdir(os.path.join(opts.dataDir,'val', opts.dataType, 'X'))) / (opts.batchSize*2)
+        validation_steps = 1 if (validation_steps == 0) else validation_steps
 	numEpochs_ = opts.numEpochs * opts.logPerEpoch
 
 	#Configuring experimentation directories..
@@ -54,12 +55,13 @@ def train(opts):
 					ext=opts.ext, outDir=os.path.join(opts.expDir, 'valImages'))
 
 	#FINALLY! TRAINING NOW..
+        #pdb.set_trace()
 	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=numEpochs_,
 								verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps,
 								callbacks=[ckptCallback,tboardCallback,valsaver])
 
 	with open(os.path.join(opts.expDir, 'trainHistory.pkl'), 'wb') as fobj: 
-		pickle.dump(history, fobj)
+		pickle.dump(history.history, fobj)
 	return
 
 
