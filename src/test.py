@@ -7,6 +7,7 @@ import pdb
 import numpy as np 
 from sklearn.metrics import precision_recall_fscore_support
 from utils import * 
+from skimage import img_as_float
 
 def GenerateStats(xpath, ypath, model, outDir, threshold):
     xtest, ytest = io.imread(xpath), io.imread(ypath) 
@@ -34,19 +35,21 @@ def Test(opts):
 
     CheckAndCreate(opts.outDir)
 
-    precisions,recalls,fscores,supports=[],[],[],[]
-    #testing image one by one..
-    for xpath,ypath in izip(pathnamesX, pathnamesY): 
-        GenerateStats(xpath, ypath, model, opts.outDir, opts.decideThreshold)
+    #loading images and model 
+    imgsX = io.ImageCollection(load_pattern=pathnamesX)
+    imgsY = io.ImageCollection(load_pattern=pathnamesY)
 
-        # precisions.append(p)
-        # recalls.append(r)
-        # fscores.append(f)
-        # supports.append(s)
-        print ',',
-        break 
+    imgsX = img_as_float(imgsX.concatenate()[:,:,:,np.newaxis])
+    imgsY = img_as_float(imgsY.concatenate()[:,:,:,np.newaxis])
 
-    #print np.mean(np.array(precisions)),np.mean(np.array(recalls)),np.mean(np.array(fscores)),np.mean(np.array(supports))
+    model = load_model(opts.modelPath,compile=False)
+
+    predY = model.predict(imgsX, batch_size=opts.batchSize, verbose=opts.verbosity)
+
+    p,r,f,_ = precision_recall_fscore_support(y_true=imgsY.flatten(), y_pred=predY.flatten() > opts.decideThreshold,
+                                    labels=[False,True])
+
+    print '[decideThreshold = {}] precision={}, recall={}, fscore(beta=1.)={}, support={}'.format(opts.decideThreshold,p,r,f,_)
     return 
 
 def SetArguments(parser): 
