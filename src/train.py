@@ -57,7 +57,7 @@ def train(opts):
 	ckptCallback=ModelCheckpoint(os.path.join(opts.expDir,'model', '{epoch:02d}-{loss:.2f}.hdf5'),
 								monitor='loss',save_best_only=True)
 	tboardCallback=TensorBoard(log_dir=os.path.join(opts.expDir,'tensorboardLogs'),histogram_freq=1,
-								batch_size=opts.batch_size,write_graph=False, write_grads=True)
+								batch_size=opts.batchSize,write_graph=False, write_grads=True)
 	valsaver = valImagesSaver(dataDir=os.path.join(opts.dataDir,'val', opts.dataType, 'X'),
 					ext=opts.ext, outDir=os.path.join(opts.expDir, 'valImages'))
 
