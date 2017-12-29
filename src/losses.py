@@ -19,12 +19,16 @@ def WeightedBinaryCrossEntropy(x_true, eps):
 def L2Loss(y_true,y_pred): 
 	return K.mean(K.square(y_true-y_pred))
 
-def WeightedL2Loss(y_true,y_pred): 
-	err = K.square(y_true-y_pred)
-	probs = K.mean(y_true,axis=(1,2,3),keepdims=True)
-	weights_pos, weights_neg = 1./probs, 1./(1-probs)
-	weights = (y_true*weights_pos) + ((1-y_true)*weights_neg)
-	return K.mean(weights*err)
+def WeightedL2Loss(x_true, eps):
+	def WeightedL2Loss(y_true,y_pred): 
+		err = K.square(y_true-y_pred)
+		probs = K.mean(x_true,axis=(1,2,3),keepdims=True)
+		weights_pos, weights_neg = 1./(probs+eps), 1./((1-probs)+eps)
+		weights = (x_true*weights_pos) + ((1-x_true)*weights_neg)
+			
+		return K.mean(weights*err)
+
+	return WeightedL2Loss
 
 losses_dict={'binaryCrossEntropy':BinaryCrossEntropy,'weightedBinaryCrossEntropy':WeightedBinaryCrossEntropy, 
 			'l2Loss': L2Loss, 'weightedL2Loss':WeightedL2Loss}
