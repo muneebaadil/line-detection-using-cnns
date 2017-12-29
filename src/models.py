@@ -1,9 +1,10 @@
 #THIS FILE CONTAINS ALL THE MODEL ARCHITECTURES EXPERIMENTED WITH.. 
 
-import keras.layers as layers 
+import keras.layers as layers,
 from keras.initializers import VarianceScaling
 from keras.models import Model, Sequential
 import itertools as iters
+from keras_contrib.layers.normalization import InstanceNormalization
 
 def model_init(opts):
     """Simple sequential image-to-image convolutional neural network"""
@@ -15,13 +16,17 @@ def model_init(opts):
     for ks, nk, a in iters.izip(opts.kernelSizes, opts.numKernels, opts.activations): 
 
         if isFirst:
-            model.add(layers.Conv2D(nk,kernel_size=ks,strides=opts.strides,padding=opts.padding,activation=a,
+            model.add(layers.Conv2D(nk,kernel_size=ks,strides=opts.strides,padding=opts.padding,
                                 kernel_initializer=init_fn, input_shape=opts.inputShape))
             isFirst = False
         else: 
-            model.add(layers.Conv2D(nk,kernel_size=ks,strides=opts.strides,padding=opts.padding,activation=a,
+            model.add(layers.Conv2D(nk,kernel_size=ks,strides=opts.strides,padding=opts.padding,
                                 kernel_initializer=init_fn))
 
+        if opts.includeInsNormLayer: 
+            model.add(InstanceNormalization(axis=opts.insNormAxis))
+
+        model.add(layers.Activation(a))
         if opts.dropRate > 0.0: 
             model.add(layers.Dropout(rate=opts.dropRate))
     return model
