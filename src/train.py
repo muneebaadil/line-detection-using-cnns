@@ -82,6 +82,8 @@ def SetArguments(parser):
 	parser.add_argument('-activations', action='store', type=str, default='relu,relu,sigmoid', dest='activations')
 	parser.add_argument('-padding', action='store', type=str, default='same', dest='padding')
 	parser.add_argument('-strides', action='store', type=int, default=1, dest='strides')
+	parser.add_argument('-includeInsNormLayer', action='store', type=bool, default=False, dest='includeInsNormLayer')
+	parser.add_argument('-insNormAxis', action='store', type=int, default=None, dest='insNormAxis')
 
 	#Learning parameters
 	parser.add_argument('-optimizerType', action='store', type=str, default='adam', dest='optimizerType')
@@ -89,10 +91,10 @@ def SetArguments(parser):
 	parser.add_argument('-lrDecay', action='store', type=float, default=0.0, dest='lrDecay')
 	parser.add_argument('-numEpochs', action='store', type=int, default=1, dest='numEpochs')
 	parser.add_argument('-verbosity', action='store', type=int, default=1, dest='verbosity')
-	parser.add_argument('-batchSize', action='store', type=int, default=1024, dest='batchSize')
+	parser.add_argument('-batchSize', action='store', type=int, default=16, dest='batchSize')
 
 	#Loss function parameters
-	parser.add_argument('-lossType', action='store', type=str, default='binaryCrossEntropy', dest='lossType')
+	parser.add_argument('-lossType', action='store', type=str, default='weightedBinaryCrossEntropy', dest='lossType')
 
 	#Logging parameters
 	parser.add_argument('-logRootDir',action='store',type=str, default='../experiments/',dest='logRootDir')
