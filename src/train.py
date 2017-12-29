@@ -4,6 +4,7 @@ import importlib
 import os 
 from time import gmtime, strftime
 from keras.callbacks import ModelCheckpoint, TensorBoard
+import pickle
 
 from models import models_dict
 from optimizers import optimizers_dict
@@ -56,6 +57,9 @@ def train(opts):
 	history = model.fit_generator(generator=train_generator, steps_per_epoch=steps_per_epoch, epochs=numEpochs_,
 								verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps,
 								callbacks=[ckptCallback,tboardCallback,valsaver])
+
+	with open(os.path.join(opts.expDir, 'trainHistory.pkl'), 'wb') as fobj: 
+		pickle.dump(history, fobj)
 	return
 
 
