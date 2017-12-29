@@ -5,6 +5,7 @@ import os
 from time import gmtime, strftime
 from keras.callbacks import ModelCheckpoint, TensorBoard
 import pickle
+from keras.models import load_model
 
 from models import models_dict
 from optimizers import optimizers_dict
@@ -23,8 +24,13 @@ def train(opts):
 	Returns: 
 	None"""
 
-	#Creating given model..
-	model = models_dict[opts.netType](opts)
+	#Creating given model OR loading pretrained network..
+	if opts.loadModel is None: 
+		print 'Creating Network Architecture..'
+		model = models_dict[opts.netType](opts)
+	else: 
+		print 'Loading Pretrained Network from {}..'.format(opts.loadModel)
+		model = load_model(opts.loadModel,compile=False)
 
 	#Compiling given model using given learning parameters..
 	optimizer = optimizers_dict[opts.optimizerType](lr=opts.learningRate, decay=opts.lrDecay)
@@ -49,7 +55,8 @@ def train(opts):
 	os.makedirs(os.path.join(opts.expDir, 'model'))
 	ckptCallback=ModelCheckpoint(os.path.join(opts.expDir,'model', '{epoch:02d}-{loss:.2f}.hdf5'),
 								monitor='loss',save_best_only=True)
-	tboardCallback=TensorBoard(log_dir=os.path.join(opts.expDir,'tensorboardLogs'))
+	tboardCallback=TensorBoard(log_dir=os.path.join(opts.expDir,'tensorboardLogs'),histogram_freq=1,
+								batch_size=opts.batch_size,write_graph=False, write_grads=True)
 	valsaver = valImagesSaver(dataDir=os.path.join(opts.dataDir,'val', opts.dataType, 'X'),
 					ext=opts.ext, outDir=os.path.join(opts.expDir, 'valImages'))
 
@@ -58,8 +65,8 @@ def train(opts):
 								verbose=opts.verbosity, validation_data=val_generator, validation_steps=validation_steps,
 								callbacks=[ckptCallback,tboardCallback,valsaver])
 
-	with open(os.path.join(opts.expDir, 'trainHistory.pkl'), 'wb') as fobj: 
-		pickle.dump(history, fobj)
+	with open(os.path.join(opts.expDir, 'trainHistory'), 'wb') as fobj: 
+		pickle.dump(history.history, fobj)
 	return
 
 
@@ -81,6 +88,7 @@ def SetArguments(parser):
 	parser.add_argument('-strides', action='store', type=int, default=1, dest='strides')
 	parser.add_argument('-includeInsNormLayer', action='store', type=bool, default=False, dest='includeInsNormLayer')
 	parser.add_argument('-insNormAxis', action='store', type=int, default=None, dest='insNormAxis')
+	parser.add_argument('-loadModel', action='store', type=str, default=None, dest='loadModel')
 
 	#Learning parameters
 	parser.add_argument('-optimizerType', action='store', type=str, default='adam', dest='optimizerType')
