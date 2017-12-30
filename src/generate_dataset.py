@@ -6,7 +6,7 @@ import argparse
 
 import pdb
 
-import utils import *
+from utils import *
         
 def AddLines(X,Y,maxNumLines,imgSize): 
     numLines = np.random.randint(1,maxNumLines)
