@@ -6,6 +6,7 @@ from time import gmtime, strftime
 from keras.callbacks import ModelCheckpoint, TensorBoard, TerminateOnNaN
 import pickle
 from keras.models import load_model
+from keras.utils import plot_model
 
 from models import models_dict
 from optimizers import optimizers_dict
@@ -51,6 +52,7 @@ def train(opts):
 	if not os.path.exists(opts.expDir): 
 		os.makedirs(opts.expDir)
 		writeConfigToFile(os.path.join(opts.expDir,'opts.txt'), vars(opts), model)
+		plot_model(model, to_file=os.path.join(opts.expDir,'network.png'))
 	
 	#Configuring callbacks..
 	os.makedirs(os.path.join(opts.expDir, 'model'))
@@ -81,6 +83,8 @@ def SetArguments(parser):
 
 	#Model parameters
 	parser.add_argument('-netType', action='store', type=str, default='imageToImageSeq', dest='netType')
+	parser.add_argument('-loadModel', action='store', type=str, default=None, dest='loadModel')
+	
 	parser.add_argument('-dropRate', action='store', type=float, default=0.0, dest='dropRate')
 	parser.add_argument('-kernelSizes', action='store', type=str, default='3,3,3', dest='kernelSizes')
 	parser.add_argument('-numKernels', action='store', type=str, default='16,16,1', dest='numKernels')
@@ -89,7 +93,11 @@ def SetArguments(parser):
 	parser.add_argument('-strides', action='store', type=int, default=1, dest='strides')
 	parser.add_argument('-includeInsNormLayer', action='store', type=bool, default=False, dest='includeInsNormLayer')
 	parser.add_argument('-insNormAxis', action='store', type=int, default=None, dest='insNormAxis')
-	parser.add_argument('-loadModel', action='store', type=str, default=None, dest='loadModel')
+
+	parser.add_argument('-numScales', action='store', type=int, default=3, dest='numScales')
+	parser.add_argument('-poolSize', action='store', type=int, default=2, dest='poolSize')
+	parser.add_argument('-poolStrides', action='store', type=int, default=2, dest='poolStrides')
+	parser.add_argument('-poolPadding', action='store', type=str, default='valid', dest='poolPadding')
 
 	#Learning parameters
 	parser.add_argument('-optimizerType', action='store', type=str, default='adam', dest='optimizerType')
@@ -113,6 +121,11 @@ def PostprocessOpts(opts):
 	opts.kernelSizes = [int(x) for x in opts.kernelSizes.split(',')]
 	opts.numKernels = [int(x) for x in opts.numKernels.split(',')]
 	opts.activations = opts.activations.split(',')
+
+	opts.kernelSizes = opts.kernelSizes[0] if (len(opts.kernelSizes)==1) else opts.kernelSizes
+	opts.numKernels = opts.numKernels[0] if (len(opts.numKernels)==1) else opts.numKernels
+	opts.activations = opts.activations[0] if (len(opts.activations)==1) else opts.activations
+
 	opts.expDir = os.path.join(opts.logRootDir, opts.logDir)
 	return 
 
