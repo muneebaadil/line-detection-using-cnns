@@ -1,5 +1,4 @@
 literature/
-experiments/
 *.ipynb
 *.pyc
 results/
