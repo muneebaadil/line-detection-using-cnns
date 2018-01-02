@@ -1,6 +1,5 @@
 import argparse
 import numpy as np
-import importlib
 import os 
 from time import gmtime, strftime
 from keras.callbacks import ModelCheckpoint, TensorBoard, TerminateOnNaN
@@ -52,7 +51,7 @@ def train(opts):
 	if not os.path.exists(opts.expDir): 
 		os.makedirs(opts.expDir)
 		writeConfigToFile(os.path.join(opts.expDir,'opts.txt'), vars(opts), model)
-		plot_model(model, to_file=os.path.join(opts.expDir,'network.png'))
+		plot_model(model, to_file=os.path.join(opts.expDir,'network.png'), show_layer_names=False)
 	
 	#Configuring callbacks..
 	os.makedirs(os.path.join(opts.expDir, 'model'))
@@ -86,9 +85,9 @@ def SetArguments(parser):
 	parser.add_argument('-loadModel', action='store', type=str, default=None, dest='loadModel')
 	
 	parser.add_argument('-dropRate', action='store', type=float, default=0.0, dest='dropRate')
-	parser.add_argument('-kernelSizes', action='store', type=str, default='3,3,3', dest='kernelSizes')
-	parser.add_argument('-numKernels', action='store', type=str, default='16,16,1', dest='numKernels')
-	parser.add_argument('-activations', action='store', type=str, default='relu,relu,sigmoid', dest='activations')
+	parser.add_argument('-kernelSizes', action='store', type=str, default='3,3', dest='kernelSizes')
+	parser.add_argument('-numKernels', action='store', type=str, default='16,16', dest='numKernels')
+	parser.add_argument('-activations', action='store', type=str, default='relu,sigmoid', dest='activations')
 	parser.add_argument('-padding', action='store', type=str, default='same', dest='padding')
 	parser.add_argument('-strides', action='store', type=int, default=1, dest='strides')
 	parser.add_argument('-includeInsNormLayer', action='store', type=bool, default=False, dest='includeInsNormLayer')
