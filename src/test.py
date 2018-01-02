@@ -42,7 +42,7 @@ def Test(opts):
 
 def SetArguments(parser): 
     #Data loading/saving parameters
-    parser.add_argument('-dataDir',action='store', type=str, default='../data/generated/test', dest='dataDir')
+    parser.add_argument('-dataDir',action='store', type=str, default='../data/test', dest='dataDir')
     parser.add_argument('-dataType',action='store', type=str, default='noNoise', dest='dataType')
     parser.add_argument('-ext', action='store',type=list, default=['png', 'jpg'], dest='ext')
     parser.add_argument('-outRootDir', action='store',type=str, default='../results/', dest='outRootDir')
