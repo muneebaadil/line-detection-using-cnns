@@ -1,0 +1,6 @@
+printEvery >> 1000
+imgSize >> 512
+numImgs >> 10
+maxNumLines >> 10
+maxNumOthers >> 5
+outDir >> ../data/generated2/val/noNoise
