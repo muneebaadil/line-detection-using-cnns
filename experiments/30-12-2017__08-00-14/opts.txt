@@ -1,0 +1,31 @@
+logPerEpoch >> 1
+lrDecay >> 0.0
+poolSize >> 2
+dataDir >> ../data/generated/
+netType >> imageToImageUnet
+optimizerType >> adam
+generatorType >> generator_full_image
+logRootDir >> ../experiments/
+loadModel >> None
+dropRate >> 0.0
+learningRate >> 0.001
+activations >> relu
+kernelSizes >> 7
+poolStrides >> 2
+numKernels >> 8
+poolPadding >> valid
+dataType >> noNoise
+epsilon >> 1e-06
+padding >> same
+strides >> 1
+lossType >> weightedL2Loss
+inputShape >> (512, 512, 1)
+includeInsNormLayer >> False
+numEpochs >> 20
+expDir >> ../experiments/30-12-2017__08-00-14
+insNormAxis >> None
+verbosity >> 1
+ext >> ['png', 'jpg']
+numScales >> 5
+batchSize >> 64
+logDir >> 30-12-2017__08-00-14
