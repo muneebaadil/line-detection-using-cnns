@@ -1,11 +1,23 @@
 # Hough Transform using Convolutional Neural Networks (CNNs)
 
-Given a binary edge-image, the task is to detect and localize basic geometric shapes (straight lines, circles, ellipses etc) using convolutional neural networks.
+Given a binary edge-image, this project tries to detect lines using CNNs (Convolutional Neural Networks) by ’switching off’ active pixels that does not belong to any line.
 
-Standard HT (Hough Transform) populates an accumulator array whose size determines the level of detail we want to have. This introduces a tradeoff between precision and computational cost. Furthermore, populating an accumulator array is often too costly for realtime applications. Also, standard HT is not robust to noise i.e discontinuity of lines in pixel-space caused by discretization often votes the false parameters of the lines in the accumulator space.
+### Motivation
+Standard HT (Hough Transform) is a popularly used method of estimating lines, given a binary image. However, standard HT requires an accumulator array whose size determines the level of incorporated detail. This introduces a tradeoff between precision and computational cost. Furthermore, the level of detail to be accounted in accumulator array differs from image to image which leads to hyper-parameter optimization _for each image_.
 
-This project aims to eliminate above mentioned limitations of classical Hough Transform. 
+For more details, please see the [project report](./docs/report.pdf).
 
+### Results
+![Unet-5-7-Input1](./data/test/noNoise/X/1.png) ![Unet-5-7-Results1](./results/30-12-2017__08-00-14/1.png)
+
+
+![Unet-5-7-Input1](./data/test/noNoise/X/8.png) ![Unet-5-7-Results2](./results/30-12-2017__08-00-14/8.png)
+
+In this repository, we provide
+* Dataset generation code
+* Training/Testing code to reproduce the results
+* Pretrained (only best two) models' weights
+* Results of pretrained (only best two) models 
 
 ## 1. Getting Started
 
@@ -44,12 +56,30 @@ Use ```conda``` package manager to install Keras:
   * For GPU Version: ```conda install -c anaconda keras-gpu``` 
 (Note: This will automatically install ```tensorflow``` too.)
 
-## 2. Training
-
-### 2.1. Dataset Preparation
+## 2. Demo/Quick Start
+1. Put the images in directory ```$dir```
 
 1. Go to ```./src/``` folder
-```cd src/```
+```
+cd src/
+```
+
+2. Run ```test.py``` python script. This script will predict images in ```dataDir``` and save the results in ```outDir```.
+```
+python test.py -dataDir <path-to-test-images> -outDir <path-to-save-results-to> -modelExpName <experiment-log-directory>
+``` 
+(For details on all arguments, please run ```python test.py --help```) 
+
+**NOTE: Default arguments of ```test.py``` are set to run our best model on default data location.**
+
+## 3. Training
+
+### 3.1. Dataset Preparation
+
+1. Go to ```./src/``` folder
+```
+cd src/
+```
 
 2. Run the ```generate_dataset.py``` script to generate the dataset synthetically:
 ```python prepare_dataset.py -outDir <path-to-save-images> -numImgs <number-of-images-to-generate>``` 
@@ -58,7 +88,7 @@ Use ```conda``` package manager to install Keras:
 
 This will generate and save input images and ground truth respective images at ```outDir/X/``` and ```outDir/Y/```
 
-### 2.2. Training the model
+### 3.2. Training the model
 
 Run the ```train.py``` script to train a model on generated dataset, like so: 
 ```python train.py -dataDir <path-to-dataset> -netType <network-name> -logDir <path-to-save-experiment>``` 
@@ -69,8 +99,6 @@ This will train a specified model on the specified dataset and will save the fol
   * Tensorboard logs
   * Predictions on validation set (of best performing model only)
   * Options used for generating this experiment
-
-## 3. Testing
 
 ## Authors
 

@@ -49,7 +49,7 @@ def SetArguments(parser):
 
     #Model parameters 
     parser.add_argument('-expRootDir',action='store',type=str, default='../experiments/',dest='expRootDir')
-    parser.add_argument('-modelExpName', action='store',type=str, default='strftime("%d-%m-%Y__%H-%M-%S",gmtime())', dest='modelExpName')
+    parser.add_argument('-modelExpName', action='store',type=str, default='30-12-2017__08-00-14', dest='modelExpName')
 
     #Other parameters 
     parser.add_argument('-batchSize', action='store',type=int, default=1, dest='batchSize')
