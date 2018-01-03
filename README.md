@@ -81,17 +81,18 @@ python test.py -dataDir <path-to-test-images> -outDir <path-to-save-results-to> 
 cd src/
 ```
 
-2. Run the ```generate_dataset.py``` script to generate the dataset synthetically:
-```python prepare_dataset.py -outDir <path-to-save-images> -numImgs <number-of-images-to-generate>``` 
-
+2. Run the ```generate_dataset.py``` script to generate the dataset synthetically. This will save input images and corresponding ground truth images at ```outDir/X/``` and ```outDir/Y/``` respectively.
+```
+python prepare_dataset.py -outDir <path-to-save-images> -numImgs <number-of-images-to-generate>
+``` 
 (See all arguments using ```python generate_dataset.py --help```)
-
-This will generate and save input images and ground truth respective images at ```outDir/X/``` and ```outDir/Y/```
 
 ### 3.2. Training the model
 
 Run the ```train.py``` script to train a model on generated dataset, like so: 
-```python train.py -dataDir <path-to-dataset> -netType <network-name> -logDir <path-to-save-experiment>``` 
+```
+python train.py -dataDir <path-to-dataset> -netType <network-name> -logDir <path-to-save-experiment>
+``` 
 (See all arguments using ```python train.py --help```)
 
 This will train a specified model on the specified dataset and will save the following to ```logRootDir/logDir/```: 
@@ -100,8 +101,12 @@ This will train a specified model on the specified dataset and will save the fol
   * Predictions on validation set (of best performing model only)
   * Options used for generating this experiment
 
-## Authors
+**NOTE: Default arguments of ```train.py``` are set to train sequential image-to-image network from scratch.**
 
-**Muneeb Aadil** - [Github Profile](https://github.com/muneebaadil) - (Email: imuneebaadil@gmail.com)
+## Author(s)
 
-See also the list of [contributors](https://github.com/muneebaadil/Hough-Transform-using-CNNs/contributors) who participated in this project.
+**Muneeb Aadil** - [Github Profile](https://github.com/muneebaadil)
+
+Feel free to contact me in case of any queries! :) 
+
+(Email: imuneebaadil@gmail.com)

@@ -74,7 +74,7 @@ def train(opts):
 
 def SetArguments(parser): 
 	#Data loading arguments
-	parser.add_argument('-dataDir',action='store', type=str, default='../data/generated/', dest='dataDir')
+	parser.add_argument('-dataDir',action='store', type=str, default='../data/', dest='dataDir')
 	parser.add_argument('-dataType',action='store', type=str, default='noNoise', dest='dataType')
 	parser.add_argument('-ext', action='store',type=list, default=['png', 'jpg'], dest='ext')
 	parser.add_argument('-generatorType', action='store', type=str, default='generator_full_image', dest='generatorType')

@@ -69,7 +69,7 @@ def writeOptsToFile(fpath, optsDict):
     fobj.close()
 
 def set_arguments(parser):
-    parser.add_argument('-outDir',action='store', type=str, default='../data/generated2/train/noNoise', dest='outDir')
+    parser.add_argument('-outDir',action='store', type=str, default='../data/train/noNoise', dest='outDir')
     parser.add_argument('-numImgs',action='store', type=int, default=10, dest='numImgs')
     parser.add_argument('-imgSize',action='store', type=int, default=512, dest='imgSize')
     parser.add_argument('-maxNumLines',action='store', type=int, default=10, dest='maxNumLines')
