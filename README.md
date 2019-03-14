@@ -104,9 +104,5 @@ This will train a specified model on the specified dataset and will save the fol
 **NOTE: Default arguments of ```train.py``` are set to train sequential image-to-image network from scratch.**
 
 ## Author(s)
-
-**Muneeb Aadil** - [Github Profile](https://github.com/muneebaadil)
-
-Feel free to contact me in case of any queries! :) 
-
-(Email: imuneebaadil@gmail.com)
+[Muneeb Aadil](https://muneebaadil.github.io)
+[Sibt ul Hussain](https://sites.google.com/site/sibtulhussain/)
